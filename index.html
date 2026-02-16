@@ -1,0 +1,1737 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>إسهام العربية | Odoo ERP Partner</title>
+
+  <style>
+    :root{
+      --bg0:#050712;
+      --bg1:#070A18;
+      --bg2:#0B1026;
+      --card: rgba(255,255,255,.06);
+      --card2: rgba(255,255,255,.04);
+      --stroke: rgba(255,255,255,.12);
+      --stroke2: rgba(255,255,255,.08);
+
+      --text:#ECF2FF;
+      --muted:#B8C2E8;
+
+      /* Ultra Palette */
+      --p1:#7C5CFF;   /* Purple */
+      --p2:#00D4FF;   /* Cyan */
+      --p3:#FF2E88;   /* Pink */
+      --p4:#FFB800;   /* Gold */
+
+      --radius: 20px;
+      --shadow: 0 22px 70px rgba(0,0,0,.45);
+
+      --font: system-ui, -apple-system, Segoe UI, Tahoma, Arial, sans-serif;
+    }
+
+    *{ box-sizing:border-box; }
+    html{ scroll-behavior:smooth; }
+    body{
+      margin:0;
+      font-family: var(--font);
+      color:var(--text);
+      background:
+        radial-gradient(1200px 700px at 15% 10%, rgba(124,92,255,.22), transparent 60%),
+        radial-gradient(900px 650px at 90% 15%, rgba(0,212,255,.16), transparent 55%),
+        radial-gradient(900px 700px at 75% 90%, rgba(255,46,136,.11), transparent 55%),
+        linear-gradient(180deg, var(--bg0), var(--bg2));
+      overflow-x:hidden;
+    }
+
+    /* ====== Background Ultra Grid ====== */
+    .grid-bg{
+      position:fixed;
+      inset:0;
+      z-index:-2;
+      opacity:.25;
+      background-image:
+        linear-gradient(to right, rgba(255,255,255,.04) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255,255,255,.04) 1px, transparent 1px);
+      background-size: 44px 44px;
+      mask-image: radial-gradient(circle at 50% 25%, black 0%, transparent 70%);
+    }
+
+    .orb{
+      position:fixed;
+      width:520px; height:520px;
+      border-radius:50%;
+      filter: blur(80px);
+      opacity:.18;
+      z-index:-1;
+      animation: floaty 10s ease-in-out infinite;
+    }
+    .o1{ left:-160px; top:-140px; background: var(--p1); }
+    .o2{ right:-180px; top:30px; background: var(--p2); animation-delay:1.5s; }
+    .o3{ right:10px; bottom:-200px; background: var(--p3); animation-delay:2.2s; }
+
+    @keyframes floaty{
+      0%,100%{ transform: translate(0,0) scale(1); }
+      50%{ transform: translate(18px, -18px) scale(1.04); }
+    }
+
+    /* ====== Topbar ====== */
+    .topbar{
+      position:sticky;
+      top:0;
+      z-index:999;
+      backdrop-filter: blur(16px);
+      background: linear-gradient(180deg, rgba(5,7,18,.82), rgba(5,7,18,.35));
+      border-bottom:1px solid rgba(255,255,255,.10);
+    }
+    .topbar-inner{
+      max-width:1200px;
+      margin:0 auto;
+      padding:14px 16px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+    }
+
+    /* ====== Brand / Logo ====== */
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      min-width: 210px;
+    }
+    .logo{
+      width:46px; height:46px;
+      border-radius:16px;
+      background:
+        radial-gradient(circle at 30% 20%, rgba(255,255,255,.18), transparent 45%),
+        linear-gradient(135deg, rgba(124,92,255,1), rgba(0,212,255,.95));
+      display:grid;
+      place-items:center;
+      box-shadow: 0 22px 60px rgba(124,92,255,.18);
+      border:1px solid rgba(255,255,255,.14);
+      overflow:hidden;
+      position:relative;
+    }
+    .logo img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      display:none;
+    }
+    .logo span{
+      font-weight:1000;
+      letter-spacing:.5px;
+      font-size:16px;
+    }
+    .brand h1{
+      margin:0;
+      font-size:14px;
+      line-height:1.2;
+      font-weight:1000;
+    }
+    .brand p{
+      margin:0;
+      font-size:12px;
+      color:rgba(255,255,255,.72);
+      line-height:1.5;
+    }
+
+    .actions{
+      display:flex;
+      align-items:center;
+      gap:10px;
+    }
+
+    .btn{
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.06);
+      color:var(--text);
+      padding:10px 12px;
+      border-radius:16px;
+      cursor:pointer;
+      transition:.25s;
+      font-weight:1000;
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      box-shadow: 0 10px 25px rgba(0,0,0,.18);
+      user-select:none;
+      text-decoration:none;
+      white-space:nowrap;
+    }
+    .btn:hover{ transform: translateY(-1px); border-color: rgba(255,255,255,.22); }
+    .btn.primary{
+      border:none;
+      background: linear-gradient(135deg, var(--p1), var(--p2));
+      color:#071018;
+      box-shadow: 0 18px 55px rgba(0,212,255,.12);
+    }
+
+    .hamburger{
+      width:46px; height:46px;
+      display:grid;
+      place-items:center;
+      border-radius:16px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.06);
+      cursor:pointer;
+      transition:.25s;
+    }
+    .hamburger:hover{ transform: translateY(-1px); border-color: rgba(255,255,255,.22); }
+    .hamburger .lines{
+      width:18px;
+      height:14px;
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+    }
+    .hamburger .lines span{
+      display:block;
+      height:2px;
+      background: rgba(255,255,255,.85);
+      border-radius:2px;
+    }
+
+    /* ====== Sidebar (ULTRA) ====== */
+    .overlay{
+      position:fixed;
+      inset:0;
+      background: rgba(0,0,0,.58);
+      opacity:0;
+      pointer-events:none;
+      transition:.25s;
+      z-index:998;
+    }
+    .overlay.active{
+      opacity:1;
+      pointer-events:auto;
+    }
+
+    .sidebar{
+      position:fixed;
+      top:0;
+      bottom:0;
+      width:min(390px, 92vw);
+      background: linear-gradient(180deg, rgba(12,16,38,.92), rgba(9,12,26,.92));
+      backdrop-filter: blur(18px);
+      box-shadow: var(--shadow);
+      z-index:999;
+      padding:16px;
+      display:flex;
+      flex-direction:column;
+      gap:14px;
+      border-left:1px solid rgba(255,255,255,.10);
+      transform: translateX(110%);
+      transition:.28s ease;
+    }
+    [dir="rtl"] .sidebar{ right:0; }
+    [dir="ltr"] .sidebar{
+      left:0;
+      transform: translateX(-110%);
+      border-left:none;
+      border-right:1px solid rgba(255,255,255,.10);
+    }
+    [dir="rtl"] .sidebar.active{ transform: translateX(0); }
+    [dir="ltr"] .sidebar.active{ transform: translateX(0); }
+
+    .sidebar-top{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      padding-bottom:10px;
+      border-bottom:1px solid rgba(255,255,255,.10);
+    }
+
+    .closebtn{
+      width:46px; height:46px;
+      border-radius:16px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.06);
+      color:var(--text);
+      cursor:pointer;
+      font-size:18px;
+      font-weight:1000;
+    }
+
+    .menu{
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      padding-top:6px;
+    }
+
+    .menu a{
+      text-decoration:none;
+      color:var(--text);
+      padding:14px 14px;
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.05);
+      transition:.25s;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      font-weight:1000;
+    }
+    .menu a:hover{
+      transform: translateY(-1px);
+      border-color: rgba(255,255,255,.18);
+      background: rgba(255,255,255,.08);
+    }
+
+    .pill{
+      font-size:12px;
+      font-weight:1000;
+      padding:6px 10px;
+      border-radius:999px;
+      background: rgba(0,212,255,.10);
+      border:1px solid rgba(0,212,255,.22);
+      color: rgba(255,255,255,.92);
+      white-space:nowrap;
+    }
+
+    .side-cta{
+      margin-top:auto;
+      padding:14px;
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,.12);
+      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.04));
+    }
+    .side-cta .title{
+      font-weight:1000;
+      margin-bottom:6px;
+    }
+    .side-cta .desc{
+      color:rgba(255,255,255,.72);
+      font-size:13px;
+      line-height:1.7;
+    }
+
+    /* ====== Layout ====== */
+    .container{
+      max-width:1200px;
+      margin:0 auto;
+      padding: 18px 16px 90px;
+    }
+
+    .card{
+      background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.04));
+      border:1px solid rgba(255,255,255,.12);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+
+    /* ====== Reveal ====== */
+    .reveal{
+      opacity:0;
+      transform: translateY(14px);
+      transition: .75s ease;
+    }
+    .reveal.show{
+      opacity:1;
+      transform: translateY(0);
+    }
+
+    /* ====== HERO ULTRA ====== */
+    .hero{
+      padding: 28px 0 10px;
+      display:grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap:16px;
+      align-items:stretch;
+    }
+
+    .hero-left{
+      padding:26px;
+      position:relative;
+    }
+    .hero-left:before{
+      content:"";
+      position:absolute;
+      inset:-1px;
+      background:
+        radial-gradient(900px 320px at 20% 0%, rgba(124,92,255,.25), transparent 60%),
+        radial-gradient(700px 320px at 85% 10%, rgba(0,212,255,.18), transparent 55%),
+        radial-gradient(900px 420px at 40% 100%, rgba(255,46,136,.12), transparent 60%);
+      pointer-events:none;
+    }
+    .hero-left > *{ position:relative; }
+
+    .kicker{
+      display:inline-flex;
+      gap:10px;
+      align-items:center;
+      padding:10px 12px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.05);
+      color: rgba(255,255,255,.88);
+      font-weight:1000;
+      font-size:13px;
+    }
+    .dot{
+      width:10px; height:10px;
+      border-radius:50%;
+      background: linear-gradient(135deg, var(--p3), var(--p2));
+      box-shadow: 0 0 0 6px rgba(255,46,136,.08);
+    }
+
+    h2{
+      margin:14px 0 10px;
+      font-size: 40px;
+      line-height:1.15;
+      letter-spacing:-.4px;
+      font-weight:1100;
+    }
+    .sub{
+      margin:0;
+      color:var(--muted);
+      font-size:16px;
+      line-height:1.95;
+      max-width: 72ch;
+    }
+
+    .cta-row{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-top:18px;
+    }
+
+    .hero-right{
+      padding:18px;
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+    }
+
+    .mini{
+      padding:14px;
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.05);
+      display:flex;
+      gap:12px;
+      align-items:flex-start;
+      transition:.25s;
+    }
+    .mini:hover{ transform: translateY(-2px); background: rgba(255,255,255,.07); }
+    .mini .ic{
+      width:44px; height:44px;
+      border-radius:16px;
+      display:grid;
+      place-items:center;
+      background: linear-gradient(135deg, rgba(255,184,0,.95), rgba(0,212,255,.85));
+      color:#071018;
+      font-weight:1100;
+      flex: 0 0 auto;
+    }
+    .mini h3{
+      margin:0;
+      font-size:14px;
+      font-weight:1000;
+    }
+    .mini p{
+      margin:6px 0 0;
+      font-size:13px;
+      color: rgba(255,255,255,.72);
+      line-height:1.85;
+    }
+
+    /* ====== Sections ====== */
+    .section{
+      margin-top:16px;
+      padding:22px;
+    }
+    .section h3{
+      margin:0 0 8px;
+      font-size:22px;
+      font-weight:1100;
+    }
+    .section p{
+      margin:0;
+      color:var(--muted);
+      line-height:1.95;
+    }
+
+    /* ====== Numbers (Counters) ====== */
+    .numbers{
+      margin-top:14px;
+      display:grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap:12px;
+    }
+    .num{
+      padding:16px;
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.05);
+      transition:.25s;
+    }
+    .num:hover{ transform: translateY(-2px); background: rgba(255,255,255,.07); }
+    .num .v{
+      font-size:28px;
+      font-weight:1200;
+      letter-spacing:-.4px;
+      background: linear-gradient(135deg, var(--p2), var(--p1), var(--p3));
+      -webkit-background-clip:text;
+      background-clip:text;
+      color:transparent;
+    }
+    .num .l{
+      margin-top:6px;
+      font-size:13px;
+      color: rgba(255,255,255,.72);
+      font-weight:900;
+      line-height:1.6;
+    }
+
+    /* ====== Services ====== */
+    .grid-3{
+      margin-top:14px;
+      display:grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap:12px;
+    }
+    .service{
+      padding:16px;
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.05);
+      transition:.25s;
+      position:relative;
+      overflow:hidden;
+    }
+    .service:before{
+      content:"";
+      position:absolute;
+      inset:-1px;
+      background: radial-gradient(520px 220px at 15% 0%, rgba(0,212,255,.12), transparent 60%);
+      opacity:.7;
+      pointer-events:none;
+    }
+    .service > *{ position:relative; }
+    .service:hover{ transform: translateY(-2px); background: rgba(255,255,255,.07); }
+    .service .title{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      margin-bottom:8px;
+    }
+    .service .badge{
+      font-size:12px;
+      font-weight:1100;
+      padding:6px 10px;
+      border-radius:999px;
+      background: rgba(124,92,255,.12);
+      border:1px solid rgba(124,92,255,.24);
+      color: rgba(255,255,255,.92);
+      white-space:nowrap;
+    }
+    .service h4{
+      margin:0;
+      font-size:16px;
+      font-weight:1100;
+    }
+    .service p{
+      margin:8px 0 0;
+      color: rgba(255,255,255,.72);
+      line-height:1.85;
+      font-size:13px;
+    }
+
+    /* ====== Odoo Modules ====== */
+    .modules{
+      margin-top:14px;
+      display:grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap:12px;
+    }
+    .module{
+      padding:14px;
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.05);
+      transition:.25s;
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+    }
+    .module:hover{ transform: translateY(-2px); background: rgba(255,255,255,.07); }
+    .module .mname{
+      font-weight:1100;
+      font-size:14px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+    }
+    .module .mchip{
+      font-size:11px;
+      font-weight:1100;
+      padding:6px 9px;
+      border-radius:999px;
+      background: rgba(255,184,0,.12);
+      border:1px solid rgba(255,184,0,.24);
+      color: rgba(255,255,255,.92);
+      white-space:nowrap;
+    }
+    .module .mdesc{
+      color: rgba(255,255,255,.72);
+      font-size:12.5px;
+      line-height:1.75;
+    }
+
+    /* ====== Clients Slider ====== */
+    .slider{
+      margin-top:14px;
+      position:relative;
+      overflow:hidden;
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.04);
+    }
+    .track{
+      display:flex;
+      gap:12px;
+      padding:14px;
+      overflow:auto;
+      scroll-snap-type:x mandatory;
+      scrollbar-width:none;
+    }
+    .track::-webkit-scrollbar{ display:none; }
+    .slide{
+      flex: 0 0 min(320px, 80vw);
+      scroll-snap-align:start;
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.05);
+      padding:14px;
+      display:flex;
+      gap:12px;
+      align-items:center;
+      transition:.25s;
+    }
+    .slide:hover{ transform: translateY(-2px); background: rgba(255,255,255,.07); }
+    .simg{
+      width:54px; height:54px;
+      border-radius:18px;
+      background: rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.12);
+      display:grid;
+      place-items:center;
+      overflow:hidden;
+      flex:0 0 auto;
+    }
+    .simg img{
+      width:100%;
+      height:100%;
+      object-fit:contain;
+      display:block;
+    }
+    .sname{
+      font-weight:1100;
+      font-size:14px;
+      line-height:1.2;
+    }
+    .ssub{
+      margin-top:4px;
+      font-size:12px;
+      color: rgba(255,255,255,.65);
+      line-height:1.6;
+    }
+
+    /* ====== Partners Grid ====== */
+    .logos{
+      margin-top:14px;
+      display:grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap:12px;
+    }
+    .logo-card{
+      padding:14px;
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.05);
+      display:flex;
+      gap:12px;
+      align-items:center;
+      transition:.25s;
+    }
+    .logo-card:hover{ transform: translateY(-2px); background: rgba(255,255,255,.07); }
+    .logo-img{
+      width:48px; height:48px;
+      border-radius:18px;
+      background: rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.12);
+      display:grid;
+      place-items:center;
+      overflow:hidden;
+      flex:0 0 auto;
+    }
+    .logo-img img{
+      width:100%;
+      height:100%;
+      object-fit:contain;
+      display:block;
+    }
+    .logo-name{
+      font-weight:1100;
+      font-size:14px;
+      line-height:1.2;
+    }
+    .logo-sub{
+      margin-top:3px;
+      font-size:12px;
+      color: rgba(255,255,255,.65);
+    }
+
+    /* ====== Contact ====== */
+    .contact-grid{
+      margin-top:14px;
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:12px;
+      align-items:stretch;
+    }
+    .form{
+      padding:16px;
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.05);
+    }
+    .row{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:10px;
+    }
+    .field{
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+      margin-bottom:10px;
+    }
+    label{
+      font-size:12px;
+      color: rgba(255,255,255,.75);
+      font-weight:1000;
+    }
+    input, textarea{
+      width:100%;
+      padding:12px 12px;
+      border-radius:16px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(0,0,0,.18);
+      color: var(--text);
+      outline:none;
+      font-size:14px;
+    }
+    textarea{ min-height:120px; resize:vertical; }
+
+    .contact-box{
+      padding:16px;
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.05);
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+    }
+    .contact-item{
+      padding:14px;
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.05);
+      display:flex;
+      gap:12px;
+      align-items:flex-start;
+    }
+    .contact-item .ic{
+      width:46px; height:46px;
+      border-radius:18px;
+      display:grid;
+      place-items:center;
+      background: linear-gradient(135deg, rgba(255,46,136,.95), rgba(124,92,255,.9));
+      color:#071018;
+      font-weight:1200;
+      flex:0 0 auto;
+    }
+    .contact-item a{
+      color: rgba(255,255,255,.92);
+      text-decoration:none;
+      font-weight:1100;
+    }
+    .contact-item a:hover{ text-decoration:underline; }
+    .small{
+      font-size:12px;
+      color: rgba(255,255,255,.68);
+      line-height:1.7;
+      margin-top:4px;
+    }
+
+    /* ====== Map ====== */
+    .map{
+      margin-top:12px;
+      overflow:hidden;
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.04);
+      height:330px;
+    }
+    .map iframe{
+      width:100%;
+      height:100%;
+      border:0;
+      filter: saturate(1.1) contrast(1.05);
+    }
+
+    /* ====== WhatsApp ====== */
+    .wa{
+      position:fixed;
+      bottom:18px;
+      z-index:999;
+      width:58px;
+      height:58px;
+      border-radius:20px;
+      display:grid;
+      place-items:center;
+      text-decoration:none;
+      background: #25D366;
+      color:#071018;
+      font-weight:1200;
+      box-shadow: 0 22px 70px rgba(0,0,0,.40);
+      transition:.25s;
+    }
+    [dir="rtl"] .wa{ left:18px; }
+    [dir="ltr"] .wa{ right:18px; }
+    .wa:hover{ transform: translateY(-2px) scale(1.03); }
+
+    /* ====== Footer ====== */
+    footer{
+      margin-top:16px;
+      padding:18px 16px;
+      border-top:1px solid rgba(255,255,255,.10);
+      color: rgba(255,255,255,.65);
+      text-align:center;
+      font-size:13px;
+    }
+
+    /* ====== Responsive ====== */
+    @media (max-width: 980px){
+      .hero{ grid-template-columns: 1fr; }
+      h2{ font-size:32px; }
+      .grid-3{ grid-template-columns: 1fr; }
+      .modules{ grid-template-columns: 1fr 1fr; }
+      .numbers{ grid-template-columns: 1fr 1fr; }
+      .logos{ grid-template-columns: 1fr 1fr; }
+      .contact-grid{ grid-template-columns: 1fr; }
+      .row{ grid-template-columns: 1fr; }
+      .brand{ min-width:unset; }
+    }
+
+    @media (max-width: 420px){
+      h2{ font-size:28px; }
+      .topbar-inner{ padding:12px 12px; }
+      .hero-left{ padding:18px; }
+      .hero-right{ padding:14px; }
+      .modules{ grid-template-columns: 1fr; }
+      .numbers{ grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="grid-bg"></div>
+  <div class="orb o1"></div>
+  <div class="orb o2"></div>
+  <div class="orb o3"></div>
+
+  <!-- Overlay + Sidebar -->
+  <div class="overlay" id="overlay" onclick="closeMenu()"></div>
+
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-top">
+      <div style="display:flex; align-items:center; gap:10px;">
+        <div class="logo">
+          <img id="logoImgSidebar" src="" alt="Esham Logo" />
+          <span id="logoFallbackSidebar">E</span>
+        </div>
+        <div>
+          <div style="font-weight:1200; font-size:14px;" data-ar="إسهام العربية" data-en="Esham Co">إسهام العربية</div>
+          <div style="color:rgba(255,255,255,.65); font-size:12px;" data-ar="Odoo ERP Partner" data-en="Odoo ERP Partner">Odoo ERP Partner</div>
+        </div>
+      </div>
+      <button class="closebtn" onclick="closeMenu()">✕</button>
+    </div>
+
+    <nav class="menu">
+      <a href="#home" onclick="goSection(event,'home')">
+        <span data-ar="الرئيسية" data-en="Home">الرئيسية</span>
+        <span class="pill">01</span>
+      </a>
+
+      <a href="#about" onclick="goSection(event,'about')">
+        <span data-ar="من نحن" data-en="About">من نحن</span>
+        <span class="pill">02</span>
+      </a>
+
+      <a href="#services" onclick="goSection(event,'services')">
+        <span data-ar="خدماتنا" data-en="Services">خدماتنا</span>
+        <span class="pill">03</span>
+      </a>
+
+      <a href="#clients" onclick="goSection(event,'clients')">
+        <span data-ar="عملاؤنا" data-en="Clients">عملاؤنا</span>
+        <span class="pill">04</span>
+      </a>
+
+      <a href="#partners" onclick="goSection(event,'partners')">
+        <span data-ar="شركاؤنا" data-en="Partners">شركاؤنا</span>
+        <span class="pill">05</span>
+      </a>
+
+      <a href="#contact" onclick="goSection(event,'contact')">
+        <span data-ar="اتصل بنا" data-en="Contact">اتصل بنا</span>
+        <span class="pill">06</span>
+      </a>
+    </nav>
+
+    <div class="side-cta">
+      <div class="title" data-ar="ابدأ من واتساب" data-en="Start on WhatsApp">ابدأ من واتساب</div>
+      <div class="desc"
+        data-ar="رسالة جاهزة راقية — تفتح لك العميل مباشرة وتخليه يعطيك التفاصيل."
+        data-en="A premium ready message that gets the client to share details instantly.">
+        رسالة جاهزة راقية — تفتح لك العميل مباشرة وتخليه يعطيك التفاصيل.
+      </div>
+      <div style="margin-top:10px;">
+        <a class="btn primary" id="waSideBtn" href="#" target="_blank">🟢 WhatsApp</a>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Topbar -->
+  <div class="topbar">
+    <div class="topbar-inner">
+
+      <div class="brand">
+        <div class="logo">
+          <img id="logoImgTop" src="" alt="Esham Logo" />
+          <span id="logoFallbackTop">E</span>
+        </div>
+        <div>
+          <h1 data-ar="إسهام العربية" data-en="Esham Co">إسهام العربية</h1>
+          <p data-ar="شركة متخصصة في تنفيذ Odoo ERP — باحترافية راقية" data-en="Premium Odoo ERP Implementation Partner">
+            شركة متخصصة في تنفيذ Odoo ERP — باحترافية راقية
+          </p>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button class="btn" onclick="toggleLang()">
+          🌐 <span data-ar="English" data-en="العربية">English</span>
+        </button>
+
+        <a class="btn primary" href="#contact" onclick="goSection(event,'contact')">
+          ⚡ <span data-ar="ابدأ الآن" data-en="Get Started">ابدأ الآن</span>
+        </a>
+
+        <div class="hamburger" onclick="openMenu()">
+          <div class="lines">
+            <span></span><span></span><span></span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <main class="container">
+
+    <!-- HERO -->
+    <section id="home" class="hero reveal">
+      <div class="card hero-left">
+        <div class="kicker">
+          <span class="dot"></span>
+          <span data-ar="Odoo ERP Partner | تنفيذ + تخصيص + تدريب" data-en="Odoo ERP Partner | Implement + Customize + Train">
+            Odoo ERP Partner | تنفيذ + تخصيص + تدريب
+          </span>
+        </div>
+
+        <h2
+          data-ar="تنفيذ Odoo ERP بأسلوب راقٍ — يرفع أداء شركتك فورًا"
+          data-en="Premium Odoo ERP Implementation — Boost Your Performance Instantly">
+          تنفيذ Odoo ERP بأسلوب راقٍ — يرفع أداء شركتك فورًا
+        </h2>
+
+        <p class="sub"
+          data-ar="إسهام العربية تقدم تنفيذ Odoo ERP للشركات التي تريد نظام واحد يجمع: المالية، المبيعات، المخزون، الموارد البشرية، المشاريع، وإدارة العمليات — مع تجربة استخدام مرتبة وتقارير قوية."
+          data-en="Esham Co delivers Odoo ERP for organizations that want one system for Finance, Sales, Inventory, HR, Projects, and Operations — with clean UX and powerful reporting.">
+          إسهام العربية تقدم تنفيذ Odoo ERP للشركات التي تريد نظام واحد يجمع: المالية، المبيعات، المخزون، الموارد البشرية، المشاريع، وإدارة العمليات — مع تجربة استخدام مرتبة وتقارير قوية.
+        </p>
+
+        <div class="cta-row">
+          <a class="btn primary" href="#services" onclick="goSection(event,'services')">
+            🚀 <span data-ar="استعرض الخدمات" data-en="Explore Services">استعرض الخدمات</span>
+          </a>
+
+          <a class="btn" id="phoneBtn" href="#">
+            📞 <span data-ar="اتصال مباشر: 05xxxxxxxx" data-en="Call: 05xxxxxxxx">اتصال مباشر: 05xxxxxxxx</span>
+          </a>
+
+          <a class="btn" id="waInlineBtn" href="#" target="_blank">
+            🟢 <span data-ar="واتساب مباشر" data-en="WhatsApp">واتساب مباشر</span>
+          </a>
+        </div>
+
+        <div class="numbers" style="margin-top:16px;">
+          <div class="num">
+            <div class="v" data-counter="28">0</div>
+            <div class="l" data-ar="موديول تم تنفيذه" data-en="Modules Delivered">موديول تم تنفيذه</div>
+          </div>
+          <div class="num">
+            <div class="v" data-counter="14">0</div>
+            <div class="l" data-ar="قطاع مختلف" data-en="Industries Served">قطاع مختلف</div>
+          </div>
+          <div class="num">
+            <div class="v" data-counter="96">0</div>
+            <div class="l" data-ar="نسبة رضا العملاء %" data-en="Client Satisfaction %">نسبة رضا العملاء %</div>
+          </div>
+          <div class="num">
+            <div class="v" data-counter="24">0</div>
+            <div class="l" data-ar="دعم واستجابة" data-en="Support Response">دعم واستجابة</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card hero-right">
+        <div class="mini">
+          <div class="ic">ERP</div>
+          <div>
+            <h3 data-ar="تنفيذ نظيف" data-en="Clean Delivery">تنفيذ نظيف</h3>
+            <p data-ar="ننفذ Odoo بدون تعقيد، وبأفضل الممارسات، وبشكل قابل للتوسع."
+               data-en="We implement Odoo with best practices, no unnecessary complexity, and scalable structure.">
+              ننفذ Odoo بدون تعقيد، وبأفضل الممارسات، وبشكل قابل للتوسع.
+            </p>
+          </div>
+        </div>
+
+        <div class="mini">
+          <div class="ic">BI</div>
+          <div>
+            <h3 data-ar="تقارير قوية" data-en="Powerful Reporting">تقارير قوية</h3>
+            <p data-ar="لوحات قيادية ومؤشرات أداء تساعد الإدارة على القرار فورًا."
+               data-en="Executive dashboards and KPIs that drive faster decisions.">
+              لوحات قيادية ومؤشرات أداء تساعد الإدارة على القرار فورًا.
+            </p>
+          </div>
+        </div>
+
+        <div class="mini">
+          <div class="ic">⚡</div>
+          <div>
+            <h3 data-ar="تشغيل فعلي" data-en="Real Go-Live">تشغيل فعلي</h3>
+            <p data-ar="نجهز فريقك ونضمن جاهزية البيانات والعمليات قبل التشغيل."
+               data-en="We ensure your team, data, and processes are ready before go-live.">
+              نجهز فريقك ونضمن جاهزية البيانات والعمليات قبل التشغيل.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ABOUT -->
+    <section id="about" class="card section reveal">
+      <h3 data-ar="من نحن" data-en="About Us">من نحن</h3>
+      <p
+        data-ar="إسهام العربية شركة سعودية متخصصة في تنفيذ نظام Odoo ERP. نؤمن أن نجاح النظام يعتمد على التنفيذ: تحليل دقيق، إعداد نظيف، تدريب ذكي، وتشغيل واقعي. لذلك نركز على الجودة والنتائج وليس مجرد تسليم."
+        data-en="Esham Co is a Saudi company specialized in Odoo ERP implementation. We believe success is in execution: precise analysis, clean configuration, smart training, and real go-live. We focus on outcomes — not just delivery.">
+        إسهام العربية شركة سعودية متخصصة في تنفيذ نظام Odoo ERP. نؤمن أن نجاح النظام يعتمد على التنفيذ: تحليل دقيق، إعداد نظيف، تدريب ذكي، وتشغيل واقعي. لذلك نركز على الجودة والنتائج وليس مجرد تسليم.
+      </p>
+
+      <div class="grid-3">
+        <div class="service">
+          <div class="title">
+            <h4 data-ar="أفضل الممارسات" data-en="Best Practices">أفضل الممارسات</h4>
+            <span class="badge">Odoo</span>
+          </div>
+          <p data-ar="نطبق Odoo كما يجب: صلاحيات، إجراءات، تقارير، ومسارات موافقات."
+             data-en="We implement Odoo properly: access rights, workflows, approvals, and reporting.">
+            نطبق Odoo كما يجب: صلاحيات، إجراءات، تقارير، ومسارات موافقات.
+          </p>
+        </div>
+
+        <div class="service">
+          <div class="title">
+            <h4 data-ar="تجربة مستخدم راقية" data-en="Premium UX">تجربة مستخدم راقية</h4>
+            <span class="badge" data-ar="سهولة" data-en="Simple">سهولة</span>
+          </div>
+          <p data-ar="نرتب الشاشات والواجهات لتكون سهلة لفريقك، وتقلل الأخطاء."
+             data-en="We refine screens and flows to be easy for your team and reduce errors.">
+            نرتب الشاشات والواجهات لتكون سهلة لفريقك، وتقلل الأخطاء.
+          </p>
+        </div>
+
+        <div class="service">
+          <div class="title">
+            <h4 data-ar="نتائج قابلة للقياس" data-en="Measurable Results">نتائج قابلة للقياس</h4>
+            <span class="badge" data-ar="ROI" data-en="ROI">ROI</span>
+          </div>
+          <p data-ar="نرفع التحكم، نسرع العمليات، ونحول بياناتك إلى قرارات."
+             data-en="We improve control, speed up operations, and turn your data into decisions.">
+            نرفع التحكم، نسرع العمليات، ونحول بياناتك إلى قرارات.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SERVICES -->
+    <section id="services" class="card section reveal">
+      <h3 data-ar="خدماتنا" data-en="Services">خدماتنا</h3>
+      <p
+        data-ar="خدماتنا مصممة للشركات التي تريد تنفيذ Odoo ERP بطريقة احترافية: واضحة، منظمة، وتحقق نتائج فعلية."
+        data-en="Our services are designed for organizations that want professional Odoo ERP implementation: clear, structured, and outcome-driven.">
+        خدماتنا مصممة للشركات التي تريد تنفيذ Odoo ERP بطريقة احترافية: واضحة، منظمة، وتحقق نتائج فعلية.
+      </p>
+
+      <div class="grid-3">
+        <div class="service">
+          <div class="title">
+            <h4 data-ar="تحليل الأعمال (AS-IS / TO-BE)" data-en="Business Analysis (AS-IS / TO-BE)">تحليل الأعمال (AS-IS / TO-BE)</h4>
+            <span class="badge" data-ar="أساس" data-en="Core">أساس</span>
+          </div>
+          <p data-ar="نرسم رحلة العمل ونوثقها ونبني أفضل تصميم داخل Odoo."
+             data-en="We map and document your workflow and build the best design inside Odoo.">
+            نرسم رحلة العمل ونوثقها ونبني أفضل تصميم داخل Odoo.
+          </p>
+        </div>
+
+        <div class="service">
+          <div class="title">
+            <h4 data-ar="تنفيذ Odoo ERP" data-en="Odoo ERP Implementation">تنفيذ Odoo ERP</h4>
+            <span class="badge" data-ar="تشغيل" data-en="Go-Live">تشغيل</span>
+          </div>
+          <p data-ar="إعداد الموديولات، الصلاحيات، الموافقات، التقارير، والتشغيل الفعلي."
+             data-en="Modules setup, access rights, approvals, reporting, and real go-live.">
+            إعداد الموديولات، الصلاحيات، الموافقات، التقارير، والتشغيل الفعلي.
+          </p>
+        </div>
+
+        <div class="service">
+          <div class="title">
+            <h4 data-ar="تخصيص وتطوير" data-en="Customization & Development">تخصيص وتطوير</h4>
+            <span class="badge" data-ar="ذكي" data-en="Smart">ذكي</span>
+          </div>
+          <p data-ar="تخصيص محسوب فقط — بدون تعقيد يسبب مشاكل مستقبلية."
+             data-en="Only necessary customization — without future complexity.">
+            تخصيص محسوب فقط — بدون تعقيد يسبب مشاكل مستقبلية.
+          </p>
+        </div>
+
+        <div class="service">
+          <div class="title">
+            <h4 data-ar="التدريب" data-en="Training">التدريب</h4>
+            <span class="badge" data-ar="فريق" data-en="Team">فريق</span>
+          </div>
+          <p data-ar="نرفع جاهزية فريقك ونجعل استخدام Odoo سهل ومحبب."
+             data-en="We enable your team and make Odoo daily usage simple and enjoyable.">
+            نرفع جاهزية فريقك ونجعل استخدام Odoo سهل ومحبب.
+          </p>
+        </div>
+
+        <div class="service">
+          <div class="title">
+            <h4 data-ar="دعم وتحسين" data-en="Support & Improvement">دعم وتحسين</h4>
+            <span class="badge" data-ar="SLA" data-en="SLA">SLA</span>
+          </div>
+          <p data-ar="نرافقك بعد التشغيل: دعم سريع، تحسينات، وتطوير مستمر."
+             data-en="Post go-live support: fast response, improvements, and continuous development.">
+            نرافقك بعد التشغيل: دعم سريع، تحسينات، وتطوير مستمر.
+          </p>
+        </div>
+
+        <div class="service">
+          <div class="title">
+            <h4 data-ar="تكامل وترحيل" data-en="Integrations & Migration">تكامل وترحيل</h4>
+            <span class="badge" data-ar="API" data-en="API">API</span>
+          </div>
+          <p data-ar="ربط Odoo مع الأنظمة الأخرى والمتاجر وبوابات الدفع وترحيل البيانات."
+             data-en="Integrate Odoo with other systems, stores, payment gateways, and migrate data.">
+            ربط Odoo مع الأنظمة الأخرى والمتاجر وبوابات الدفع وترحيل البيانات.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ODOO MODULES -->
+    <section id="modules" class="card section reveal">
+      <h3 data-ar="موديولات Odoo التي ننفذها" data-en="Odoo Modules We Implement">موديولات Odoo التي ننفذها</h3>
+      <p
+        data-ar="ننفذ الموديولات الأساسية والمتقدمة حسب احتياجك، ونربطها معًا لتعمل كمنظومة واحدة."
+        data-en="We implement core and advanced modules based on your needs and connect them into one unified system.">
+        ننفذ الموديولات الأساسية والمتقدمة حسب احتياجك، ونربطها معًا لتعمل كمنظومة واحدة.
+      </p>
+
+      <div class="modules">
+        <div class="module">
+          <div class="mname"><span data-ar="المحاسبة والمالية" data-en="Accounting & Finance">المحاسبة والمالية</span><span class="mchip">Core</span></div>
+          <div class="mdesc" data-ar="قيود، فواتير، دفعات، تقارير مالية، ميزانيات."
+               data-en="Journals, invoices, payments, financial reports, budgets.">
+            قيود، فواتير، دفعات، تقارير مالية، ميزانيات.
+          </div>
+        </div>
+
+        <div class="module">
+          <div class="mname"><span data-ar="المبيعات وCRM" data-en="Sales & CRM">المبيعات وCRM</span><span class="mchip">Growth</span></div>
+          <div class="mdesc" data-ar="إدارة العملاء المحتملين، الفرص، العروض، مسار البيع."
+               data-en="Leads, opportunities, quotations, sales pipeline.">
+            إدارة العملاء المحتملين، الفرص، العروض، مسار البيع.
+          </div>
+        </div>
+
+        <div class="module">
+          <div class="mname"><span data-ar="المشتريات" data-en="Purchases">المشتريات</span><span class="mchip">Ops</span></div>
+          <div class="mdesc" data-ar="طلبات شراء، موافقات، موردين، تتبع التكلفة."
+               data-en="Purchase orders, approvals, vendors, cost tracking.">
+            طلبات شراء، موافقات، موردين، تتبع التكلفة.
+          </div>
+        </div>
+
+        <div class="module">
+          <div class="mname"><span data-ar="المخزون" data-en="Inventory">المخزون</span><span class="mchip">Ops</span></div>
+          <div class="mdesc" data-ar="مستودعات، تحويلات، تتبع أصناف، باركود."
+               data-en="Warehouses, transfers, item tracking, barcode.">
+            مستودعات، تحويلات، تتبع أصناف، باركود.
+          </div>
+        </div>
+
+        <div class="module">
+          <div class="mname"><span data-ar="المشاريع" data-en="Projects">المشاريع</span><span class="mchip">Pro</span></div>
+          <div class="mdesc" data-ar="إدارة المهام، التقدم، التسليم، فرق العمل."
+               data-en="Tasks, progress, delivery, team collaboration.">
+            إدارة المهام، التقدم، التسليم، فرق العمل.
+          </div>
+        </div>
+
+        <div class="module">
+          <div class="mname"><span data-ar="الموارد البشرية" data-en="HR">الموارد البشرية</span><span class="mchip">HR</span></div>
+          <div class="mdesc" data-ar="إجازات، حضور، موظفين، رواتب (حسب الحاجة)."
+               data-en="Leaves, attendance, employees, payroll (as needed).">
+            إجازات، حضور، موظفين، رواتب (حسب الحاجة).
+          </div>
+        </div>
+
+        <div class="module">
+          <div class="mname"><span data-ar="خدمة العملاء" data-en="Helpdesk">خدمة العملاء</span><span class="mchip">CX</span></div>
+          <div class="mdesc" data-ar="تذاكر، SLA، تصعيد، جودة خدمة."
+               data-en="Tickets, SLA, escalation, service quality.">
+            تذاكر، SLA، تصعيد، جودة خدمة.
+          </div>
+        </div>
+
+        <div class="module">
+          <div class="mname"><span data-ar="التصنيع" data-en="Manufacturing (MRP)">التصنيع</span><span class="mchip">MRP</span></div>
+          <div class="mdesc" data-ar="أوامر تصنيع، مواد، تكاليف، جودة."
+               data-en="Manufacturing orders, BOM, costing, quality.">
+            أوامر تصنيع، مواد، تكاليف، جودة.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CLIENTS -->
+    <section class="card section reveal" id="clients">
+      <h3 data-ar="عملاؤنا" data-en="Clients">عملاؤنا</h3>
+      <p
+        data-ar="نفتخر بثقة عملائنا. نحن لا نقدم نظام فقط — بل نقدم تجربة تنفيذ راقية، وضبط عمليات، وتقارير تجعل القرار أسرع."
+        data-en="We’re proud of our clients’ trust. We don’t just deliver a system — we deliver a premium implementation experience, process control, and decision-ready reporting.">
+        نفتخر بثقة عملائنا. نحن لا نقدم نظام فقط — بل نقدم تجربة تنفيذ راقية، وضبط عمليات، وتقارير تجعل القرار أسرع.
+      </p>
+
+      <div class="slider">
+        <div class="track" id="clientsTrack"></div>
+      </div>
+    </section>
+
+    <!-- PARTNERS -->
+    <section class="card section reveal" id="partners">
+      <h3 data-ar="شركاؤنا" data-en="Partners">شركاؤنا</h3>
+      <p
+        data-ar="شراكاتنا مبنية على الجودة. نعمل مع شركاء يضيفون قيمة حقيقية للتنفيذ، والتكامل، والأمن، وتجربة المستخدم."
+        data-en="Our partnerships are built on quality. We work with partners who add real value in implementation, integrations, security, and user experience.">
+        شراكاتنا مبنية على الجودة. نعمل مع شركاء يضيفون قيمة حقيقية للتنفيذ، والتكامل، والأمن، وتجربة المستخدم.
+      </p>
+
+      <div class="logos" id="partnersGrid"></div>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact" class="card section reveal">
+      <h3 data-ar="اتصل بنا" data-en="Contact">اتصل بنا</h3>
+      <p
+        data-ar="اختر الطريقة الأنسب. واتساب أسرع، أو أرسل طلب اهتمام وسيتم فتح البريد مباشرة إلى info@esham.co"
+        data-en="Choose what suits you. WhatsApp is fastest, or send an inquiry — it will open an email to info@esham.co">
+        اختر الطريقة الأنسب. واتساب أسرع، أو أرسل طلب اهتمام وسيتم فتح البريد مباشرة إلى info@esham.co
+      </p>
+
+      <div class="contact-grid">
+        <div class="form">
+          <div class="row">
+            <div class="field">
+              <label data-ar="الاسم" data-en="Name">الاسم</label>
+              <input id="c_name" type="text" placeholder="اكتب اسمك" />
+            </div>
+            <div class="field">
+              <label data-ar="البريد الإلكتروني" data-en="Email">البريد الإلكتروني</label>
+              <input id="c_email" type="email" placeholder="name@company.com" />
+            </div>
+          </div>
+
+          <div class="field">
+            <label data-ar="اسم الشركة" data-en="Company Name">اسم الشركة</label>
+            <input id="c_company" type="text" placeholder="مثال: شركة الواجهة الذهبية" />
+          </div>
+
+          <div class="field">
+            <label data-ar="رسالتك" data-en="Message">رسالتك</label>
+            <textarea id="c_msg" placeholder="اكتب تفاصيل احتياجك..."></textarea>
+          </div>
+
+          <button class="btn primary" style="width:100%; justify-content:center;" onclick="sendEmail()">
+            ✉️ <span data-ar="إرسال طلب اهتمام" data-en="Send Inquiry">إرسال طلب اهتمام</span>
+          </button>
+
+          <div class="small"
+            data-ar="هذا النموذج يفتح البريد مباشرة. إذا تريد إرسال تلقائي بدون فتح البريد أعطيك نسخة جاهزة."
+            data-en="This opens your email client. If you want auto sending without opening email, I can provide it.">
+            هذا النموذج يفتح البريد مباشرة. إذا تريد إرسال تلقائي بدون فتح البريد أعطيك نسخة جاهزة.
+          </div>
+        </div>
+
+        <div class="contact-box">
+
+          <div class="contact-item">
+            <div class="ic">📞</div>
+            <div>
+              <div style="font-weight:1100;" data-ar="اتصال مباشر" data-en="Direct Call">اتصال مباشر</div>
+              <a id="phoneLink" href="#">05xxxxxxxx</a>
+              <div class="small" data-ar="اضغط للاتصال من الجوال مباشرة." data-en="Tap to call directly from mobile.">
+                اضغط للاتصال من الجوال مباشرة.
+              </div>
+            </div>
+          </div>
+
+          <div class="contact-item">
+            <div class="ic">✉️</div>
+            <div>
+              <div style="font-weight:1100;" data-ar="البريد" data-en="Email">البريد</div>
+              <a id="emailLink" href="mailto:info@esham.co">info@esham.co</a>
+              <div class="small" data-ar="جاهز للاستفسارات والعروض." data-en="Ready for inquiries and proposals.">
+                جاهز للاستفسارات والعروض.
+              </div>
+            </div>
+          </div>
+
+          <div class="contact-item">
+            <div class="ic">📍</div>
+            <div>
+              <div style="font-weight:1100;" data-ar="العنوان" data-en="Address">العنوان</div>
+              <div class="small" id="addressText"></div>
+            </div>
+          </div>
+
+          <div class="contact-item">
+            <div class="ic">🟢</div>
+            <div>
+              <div style="font-weight:1100;" data-ar="واتساب" data-en="WhatsApp">واتساب</div>
+              <a id="waTextLink" href="#" target="_blank">WhatsApp</a>
+              <div class="small"
+                data-ar="رسالة ترحيبية جاهزة تفتح لك العميل مباشرة."
+                data-en="A premium ready message that gets client details fast.">
+                رسالة ترحيبية جاهزة تفتح لك العميل مباشرة.
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="map">
+        <iframe id="mapFrame"
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+          src="">
+        </iframe>
+      </div>
+    </section>
+
+    <footer>
+      <span data-ar="© جميع الحقوق محفوظة — شركة إسهام العربية" data-en="© All rights reserved — Esham Co">
+        © جميع الحقوق محفوظة — شركة إسهام العربية
+      </span>
+    </footer>
+
+  </main>
+
+  <!-- WhatsApp Floating -->
+  <a class="wa" id="waBtn" target="_blank" rel="noopener" title="WhatsApp">🟢</a>
+
+  <script>
+    /* =========================================================
+      1) مكان واحد فقط لتغيير كل شيء مستقبلاً
+    ========================================================= */
+    const SITE = {
+      // شعار الشركة (ضع الملف بجانب index.html)
+      logoFileName: "logo.png",
+
+      // الجوال
+      phoneLocal: "0539429000",          // يظهر للزائر
+      phoneInternational: "966539429000", // للاتصال + واتساب
+
+      // البريد
+      email: "info@esham.co",
+
+      // العنوان
+      addressAR: "ضع عنوان شركتك هنا لاحقًا (مثال: الرياض - حي ...)",
+      addressEN: "Add your address here later (Example: Riyadh - District ...)",
+
+      // رابط قوقل ماب
+      mapEmbedUrl: "https://www.google.com/maps?q=Riyadh%20Saudi%20Arabia&output=embed",
+
+      // العملاء (سلايدر)
+      clients: [
+        { ar:"اسم العميل 1", en:"Client Name 1", subAr:"قطاع: تجارة", subEn:"Industry: Trading", logo:"client1.png" },
+        { ar:"اسم العميل 2", en:"Client Name 2", subAr:"قطاع: خدمات", subEn:"Industry: Services", logo:"client2.png" },
+        { ar:"اسم العميل 3", en:"Client Name 3", subAr:"قطاع: مقاولات", subEn:"Industry: Construction", logo:"client3.png" },
+        { ar:"اسم العميل 4", en:"Client Name 4", subAr:"قطاع: تصنيع", subEn:"Industry: Manufacturing", logo:"client4.png" },
+        { ar:"اسم العميل 5", en:"Client Name 5", subAr:"قطاع: تقنية", subEn:"Industry: Technology", logo:"client5.png" },
+      ],
+
+      // الشركاء (Grid)
+      partners: [
+        { ar:"اسم الشريك 1", en:"Partner Name 1", subAr:"حلول أعمال", subEn:"Business Solutions", logo:"partner1.png" },
+        { ar:"اسم الشريك 2", en:"Partner Name 2", subAr:"تقنية", subEn:"Technology", logo:"partner2.png" },
+        { ar:"اسم الشريك 3", en:"Partner Name 3", subAr:"تكامل", subEn:"Integration", logo:"partner3.png" },
+        { ar:"اسم الشريك 4", en:"Partner Name 4", subAr:"ERP", subEn:"ERP", logo:"partner4.png" },
+      ],
+    };
+
+    /* =========================================================
+      2) رسالة واتساب مذهلة (AR + EN)
+    ========================================================= */
+    const WA_MSG_AR =
+      "مرحبًا 👋✨\n" +
+      "أنا مهتم بخدمات شركة *إسهام العربية* لتنفيذ نظام *Odoo ERP*.\n\n" +
+      "أحتاج استشارة سريعة حول:\n" +
+      "• الموديولات المناسبة لعملي\n" +
+      "• المدة المتوقعة للتنفيذ\n" +
+      "• التكلفة المبدئية\n\n" +
+      "اسم الشركة: ____\n" +
+      "الاسم: ____\n" +
+      "القطاع: ____\n\n" +
+      "أتمنى التواصل معي في أقرب وقت 🙏";
+
+    const WA_MSG_EN =
+      "Hello 👋✨\n" +
+      "I’m interested in *Esham Co* services for implementing *Odoo ERP*.\n\n" +
+      "I’d like a quick consultation about:\n" +
+      "• Recommended modules\n" +
+      "• Estimated timeline\n" +
+      "• Initial cost range\n\n" +
+      "Company: ____\n" +
+      "Name: ____\n" +
+      "Industry: ____\n\n" +
+      "Please contact me at your earliest convenience 🙏";
+
+    /* =========================================================
+      3) اللغة
+    ========================================================= */
+    let currentLang = "ar";
+
+    function applyLang(){
+      const nodes = document.querySelectorAll("[data-ar][data-en]");
+      nodes.forEach(n=>{
+        n.textContent = (currentLang === "ar") ? n.getAttribute("data-ar") : n.getAttribute("data-en");
+      });
+
+      document.documentElement.lang = currentLang;
+      document.documentElement.dir = (currentLang === "ar") ? "rtl" : "ltr";
+
+      // WhatsApp
+      const msg = (currentLang === "ar") ? WA_MSG_AR : WA_MSG_EN;
+      const waLink = "https://wa.me/" + SITE.phoneInternational + "?text=" + encodeURIComponent(msg);
+
+      document.getElementById("waBtn").href = waLink;
+      document.getElementById("waSideBtn").href = waLink;
+      document.getElementById("waInlineBtn").href = waLink;
+      document.getElementById("waTextLink").href = waLink;
+
+      // Address
+      document.getElementById("addressText").textContent =
+        (currentLang === "ar") ? SITE.addressAR : SITE.addressEN;
+
+      // Phone CTA text
+      document.getElementById("phoneBtn").querySelector("span").textContent =
+        (currentLang === "ar")
+          ? ("اتصال مباشر: " + SITE.phoneLocal)
+          : ("Call: " + SITE.phoneLocal);
+    }
+
+    function toggleLang(){
+      currentLang = (currentLang === "ar") ? "en" : "ar";
+      applyLang();
+      renderClients();
+      renderPartners();
+    }
+
+    /* =========================================================
+      4) Sidebar
+    ========================================================= */
+    const sidebar = document.getElementById("sidebar");
+    const overlay = document.getElementById("overlay");
+
+    function openMenu(){
+      sidebar.classList.add("active");
+      overlay.classList.add("active");
+    }
+
+    function closeMenu(){
+      sidebar.classList.remove("active");
+      overlay.classList.remove("active");
+    }
+
+    function goSection(e, id){
+      e.preventDefault();
+      closeMenu(); // يختفي فور الاختيار
+      document.getElementById(id).scrollIntoView({behavior:"smooth", block:"start"});
+    }
+
+    window.addEventListener("resize", ()=> closeMenu());
+
+    /* =========================================================
+      5) Email (mailto)
+    ========================================================= */
+    function sendEmail(){
+      const name = document.getElementById("c_name").value.trim();
+      const email = document.getElementById("c_email").value.trim();
+      const company = document.getElementById("c_company").value.trim();
+      const msg = document.getElementById("c_msg").value.trim();
+
+      const subject = (currentLang === "ar")
+        ? "طلب اهتمام - تنفيذ Odoo ERP"
+        : "Inquiry - Odoo ERP Implementation";
+
+      const bodyAR =
+        "مرحبًا فريق إسهام العربية،\n\n" +
+        "أرغب في تنفيذ نظام Odoo ERP.\n\n" +
+        "الاسم: " + (name || "غير مذكور") + "\n" +
+        "البريد: " + (email || "غير مذكور") + "\n" +
+        "الشركة: " + (company || "غير مذكور") + "\n\n" +
+        "الرسالة:\n" + (msg || "—") + "\n\n" +
+        "شكراً لكم.";
+
+      const bodyEN =
+        "Hello Esham Team,\n\n" +
+        "I’m interested in implementing Odoo ERP.\n\n" +
+        "Name: " + (name || "Not provided") + "\n" +
+        "Email: " + (email || "Not provided") + "\n" +
+        "Company: " + (company || "Not provided") + "\n\n" +
+        "Message:\n" + (msg || "—") + "\n\n" +
+        "Thank you.";
+
+      const body = (currentLang === "ar") ? bodyAR : bodyEN;
+
+      const mailto = "mailto:" + SITE.email +
+        "?subject=" + encodeURIComponent(subject) +
+        "&body=" + encodeURIComponent(body);
+
+      window.location.href = mailto;
+    }
+
+    /* =========================================================
+      6) Clients Slider
+    ========================================================= */
+    function renderClients(){
+      const track = document.getElementById("clientsTrack");
+      track.innerHTML = "";
+
+      SITE.clients.forEach(c=>{
+        const slide = document.createElement("div");
+        slide.className = "slide";
+
+        const imgWrap = document.createElement("div");
+        imgWrap.className = "simg";
+
+        const img = document.createElement("img");
+        img.src = c.logo;
+        img.alt = (currentLang === "ar") ? c.ar : c.en;
+
+        imgWrap.appendChild(img);
+
+        const info = document.createElement("div");
+        const name = document.createElement("div");
+        name.className = "sname";
+        name.textContent = (currentLang === "ar") ? c.ar : c.en;
+
+        const sub = document.createElement("div");
+        sub.className = "ssub";
+        sub.textContent = (currentLang === "ar") ? c.subAr : c.subEn;
+
+        info.appendChild(name);
+        info.appendChild(sub);
+
+        slide.appendChild(imgWrap);
+        slide.appendChild(info);
+
+        track.appendChild(slide);
+      });
+    }
+
+    /* =========================================================
+      7) Partners Grid
+    ========================================================= */
+    function renderPartners(){
+      const grid = document.getElementById("partnersGrid");
+      grid.innerHTML = "";
+
+      SITE.partners.forEach(p=>{
+        const div = document.createElement("div");
+        div.className = "logo-card";
+
+        const imgWrap = document.createElement("div");
+        imgWrap.className = "logo-img";
+
+        const img = document.createElement("img");
+        img.src = p.logo;
+        img.alt = (currentLang === "ar") ? p.ar : p.en;
+
+        imgWrap.appendChild(img);
+
+        const info = document.createElement("div");
+        const name = document.createElement("div");
+        name.className = "logo-name";
+        name.textContent = (currentLang === "ar") ? p.ar : p.en;
+
+        const sub = document.createElement("div");
+        sub.className = "logo-sub";
+        sub.textContent = (currentLang === "ar") ? p.subAr : p.subEn;
+
+        info.appendChild(name);
+        info.appendChild(sub);
+
+        div.appendChild(imgWrap);
+        div.appendChild(info);
+
+        grid.appendChild(div);
+      });
+    }
+
+    /* =========================================================
+      8) Google Map + Phone + Email
+    ========================================================= */
+    function setupContact(){
+      document.getElementById("mapFrame").src = SITE.mapEmbedUrl;
+
+      const phoneHref = "tel:+" + SITE.phoneInternational;
+
+      document.getElementById("phoneLink").href = phoneHref;
+      document.getElementById("phoneLink").textContent = SITE.phoneLocal;
+
+      document.getElementById("phoneBtn").href = phoneHref;
+
+      document.getElementById("emailLink").href = "mailto:" + SITE.email;
+      document.getElementById("emailLink").textContent = SITE.email;
+    }
+
+    /* =========================================================
+      9) Logo Auto (إذا موجود يظهر - إذا لا يظهر E)
+    ========================================================= */
+    function setupLogo(){
+      const topImg = document.getElementById("logoImgTop");
+      const sideImg = document.getElementById("logoImgSidebar");
+      const topFallback = document.getElementById("logoFallbackTop");
+      const sideFallback = document.getElementById("logoFallbackSidebar");
+
+      const tryLoad = (imgEl, fallbackEl) => {
+        imgEl.src = SITE.logoFileName;
+
+        imgEl.onload = () => {
+          imgEl.style.display = "block";
+          fallbackEl.style.display = "none";
+        };
+
+        imgEl.onerror = () => {
+          imgEl.style.display = "none";
+          fallbackEl.style.display = "block";
+        };
+      };
+
+      tryLoad(topImg, topFallback);
+      tryLoad(sideImg, sideFallback);
+    }
+
+    /* =========================================================
+      10) Reveal on scroll
+    ========================================================= */
+    function setupReveal(){
+      const els = document.querySelectorAll(".reveal");
+      const io = new IntersectionObserver((entries)=>{
+        entries.forEach(e=>{
+          if(e.isIntersecting){
+            e.target.classList.add("show");
+            io.unobserve(e.target);
+          }
+        });
+      }, {threshold:0.12});
+      els.forEach(el=> io.observe(el));
+    }
+
+    /* =========================================================
+      11) Counters
+    ========================================================= */
+    function setupCounters(){
+      const counters = document.querySelectorAll("[data-counter]");
+      const run = (el)=>{
+        const target = parseInt(el.getAttribute("data-counter"), 10);
+        let cur = 0;
+        const step = Math.max(1, Math.floor(target / 60));
+        const t = setInterval(()=>{
+          cur += step;
+          if(cur >= target){
+            cur = target;
+            clearInterval(t);
+          }
+          el.textContent = cur;
+        }, 16);
+      };
+
+      const io = new IntersectionObserver((entries)=>{
+        entries.forEach(e=>{
+          if(e.isIntersecting){
+            run(e.target);
+            io.unobserve(e.target);
+          }
+        });
+      }, {threshold:0.4});
+
+      counters.forEach(c=> io.observe(c));
+    }
+
+    /* =========================================================
+      تشغيل
+    ========================================================= */
+    setupLogo();
+    setupContact();
+    renderClients();
+    renderPartners();
+    applyLang();
+    setupReveal();
+    setupCounters();
+  </script>
+</body>
+</html>
